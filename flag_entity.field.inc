@@ -124,7 +124,6 @@ function flag_entity_field_widget_form(&$form, &$form_state, $field, $instance, 
  * Implements hook_field_widget_info_alter().
  */
 function flag_entity_field_widget_info_alter(&$info) {
-  dsm($info, '$info');
   $info['options_select']['field types'][] = 'flag_entity_fields_flag';
   $info['options_buttons']['field types'][] = 'flag_entity_fields_flag';
 }

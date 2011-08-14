@@ -3,7 +3,6 @@
  * Implements hook_field_schema().
  */
 function flag_entity_field_schema($field) {
-  dsm($field);
   switch($field['type']) {
     case 'flag_entity_fields_flag':
       $columns = array(

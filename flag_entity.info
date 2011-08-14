@@ -2,10 +2,10 @@ name = Flag Entity
 description = Flag for any entity
 core = 7.x
 dependencies[] = flag
-dependencies[] = entity
+; @todo: Remove later ...
+dependencies[] = devel
 package = Flags
 configure = admin/structure/flags
 files[] = flag_entity.install
 files[] = flag_entity.module
 files[] = flag_entity.field.inc
-
