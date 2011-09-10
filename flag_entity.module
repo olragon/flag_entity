@@ -27,8 +27,6 @@ function flag_entity_token_get_type($entity_type) {
   return $return;
 }
 
-
-
 /**
  * Implements hook_form_FORM_ID_alter().
  */
@@ -82,7 +80,6 @@ function flag_entity_flag_definitions() {
  */
 class flag_entity extends flag_flag {
 
-  //@todo: kiểm tra chỗ này! entity có thể không có show_on_teaser, show_on_form ...
   function options() {
     $options = parent::options();
     $options += array(
@@ -171,8 +168,7 @@ class flag_entity extends flag_flag {
   }
 
   /**
-   * @todo: entity_load cần phải có entity_type. kiểm tra làm sao cấu hình entity type.
-   * @todo: cân nhắc việc sử dụng hàm load có sẵn của entity.
+   * 
    */
   function _load_content($content_id) {
     if(is_numeric($content_id)) {
@@ -183,10 +179,7 @@ class flag_entity extends flag_flag {
   }
 
   /**
-   * @todo:
-   * @changes:
-   *   - rename $node -> $entity
-   *   - cần xác định thuộc tính của entity xem type ở đâu?
+   * 
    */
   function applies_to_content_object($entity) {
     if ($entity && in_array($entity->{$this->entity_bundle}, $this->types)) {
@@ -196,7 +189,7 @@ class flag_entity extends flag_flag {
   }
 
   /**
-   * @todo: kiểm tra làm sao tương tác với phân quyền của một entity.
+   * 
    */
   function access_multiple($content_ids, $account = NULL) {
     $access = parent::access_multiple($content_ids, $account);
@@ -215,18 +208,13 @@ class flag_entity extends flag_flag {
   }
 
   /**
-   * @changes:
-   *   - rename $node -> $entity
-   *   - kiểm tra thuộc tính id của entity.
+   * 
    */
   function get_content_id($entity) {
-    //die(print_r($this));
     return $entity->{$this->entity_id};
   }
 
   /**
-   * @todo: xem xét việc bỏ qua hàm này.
-   *
    * Adjust the Content ID to find the translation parent if i18n-enabled.
    *
    * @param $content_id
@@ -245,7 +233,7 @@ class flag_entity extends flag_flag {
   }
 
   /**
-   * @todo: kiểm tra xem hàm này làm gì?
+   * 
    */
   function uses_hook_link($teaser) {
     if ($teaser && $this->show_on_teaser || !$teaser && $this->show_on_page) {
@@ -270,54 +258,37 @@ class flag_entity extends flag_flag {
   }
 
   /**
-   * Kiểm tra xem node ở đây là entity type hay là gì?
+   * 
    */
   function get_labels_token_types() {
     // Fix token error with entity name like commerce_product
     $token_type = flag_entity_token_get_type($this->content_type);
     return array_merge(array($token_type), parent::get_labels_token_types());
   }
-
+  
   /**
-   * Kiểm tra xem entity api xử lý vụ token ra sao?
+   *
    */
   function replace_tokens($label, $contexts, $options, $content_id) {
-    //die(print_r($this->fetch_content($content_id)));
     if ($content_id && ($entity = $this->fetch_content($content_id))) {
       $contexts[$this->content_type] = $entity;
     }
     return parent::replace_tokens($label, $contexts, $options, $content_id);
-    
-//    if (is_numeric($content_id) && ($entity = $this->fetch_content($content_id))) {
-//      $contexts[$this->content_type] = $entity;
-//    }
-//    // Nodes accept the node-type as a $content_id in the case that a new node
-//    // is being created and a full node object does not yet exist.
-//    elseif (!empty($content_id) && ($type = entity_load($this->content_type, array($content_id)))) {
-//      $content_id = NULL;
-//      $contexts[$this->content_type] = (object) array(
-//        $this->entity_id => NULL,
-//        $this->entity_type => $type->type,
-//        $this->entity_label => '',
-//      );
-//    }
-//    return parent::replace_tokens($label, $contexts, $options, $content_id);
   }
 
   /**
-   * Xác định entity title, đường dẫn đến xem nội dung của entity
+   * 
    */
   function get_flag_action($content_id) {
     $flag_action = parent::get_flag_action($content_id);
     $entity = $this->fetch_content($content_id);
     $flag_action->content_title = $entity->{$this->entity_label};
     $flag_action->content_url = _flag_url($this->entity_type . '/' . $entity->{$this->entity_id});
-    dsm($flag_actions);
     return $flag_action;
   }
 
   /**
-   * Sửa node -> entity_type khác cho phù hợp
+   * 
    */
   function get_valid_actions() {
     $actions = module_invoke_all('action_info');
