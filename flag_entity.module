@@ -79,7 +79,7 @@ function flag_entity_flag_definitions() {
  * Implements a node flag.
  */
 class flag_entity extends flag_flag {
-
+  
   function options() {
     $options = parent::options();
     $options += array(
@@ -321,6 +321,10 @@ class flag_entity extends flag_flag {
   }
 
   function get_views_info() {
+    $entity_info = flag_entity_entity_get_info($this->content_type);
+    $this->entity_base_table = $entity_info['base table'];
+    $this->entity_id = $entity_info['entity keys']['id'];
+    $this->entity_label = isset($entity_info['entity keys']['label']) ? $entity_info['entity keys']['label'] : '';
     return array(
       'views table' => $this->entity_base_table,
       'join field' => $this->entity_id,
@@ -333,3 +337,12 @@ class flag_entity extends flag_flag {
   }
 }
 
+/**
+ * Implements hook_views_api().
+ */
+function flag_entity_views_api() {
+  return array(
+    'api' => views_api_version(),
+    'path' => drupal_get_path('module', 'flag_entity') . '/includes',
+  );
+}
